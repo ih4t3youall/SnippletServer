@@ -7,24 +7,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import javax.swing.JOptionPane;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.springframework.stereotype.Component;
 
+import ar.com.SnippletServer.dto.CategoriaDTO;
+import ar.com.SnippletServer.dto.SendDTO;
 
 @Component
 public class Persistencia {
 
-
 	private String userHome;
-	
-	
-	public Persistencia(){
-		userHome = System.getProperty("user.home") + "/";
-		
-	}
 
+	public Persistencia() {
+		userHome = System.getProperty("user.home") + "\\" + "SnippletServer" + "\\";
+
+	}
 
 	public void createCategory(String filename) throws IOException {
 
@@ -34,95 +33,82 @@ public class Persistencia {
 		}
 	}
 
-
-//	public void saveNewConfiguration(FileConfiguration fileConfiguration)
-//			throws IOException {
-//		File file;
-//			file = new File(fileConfiguration.getConfigurationPrefix());
-//		file.delete();
-//		
-//		file.createNewFile();
-//		FileOutputStream os = new FileOutputStream(file);
-//		ObjectOutputStream oos = new ObjectOutputStream(os);
-//		oos.writeObject(fileConfiguration);
-//		oos.close();
-//		os.close();
-//
-//	}
-
-
-	
-	
-
+	// public void saveNewConfiguration(FileConfiguration fileConfiguration)
+	// throws IOException {
+	// File file;
+	// file = new File(fileConfiguration.getConfigurationPrefix());
+	// file.delete();
+	//
+	// file.createNewFile();
+	// FileOutputStream os = new FileOutputStream(file);
+	// ObjectOutputStream oos = new ObjectOutputStream(os);
+	// oos.writeObject(fileConfiguration);
+	// oos.close();
+	// os.close();
+	//
+	// }
 
 	/**
 	 * 
 	 * check if a file exist using as base the userHome property
 	 * 
-	 * @param filename the file path after the userHome
+	 * @param filename
+	 *            the file path after the userHome
 	 */
 	public boolean fileExist(String filename) {
-
+		System.out.println("absolute path: " + userHome + filename);
 		return new File(userHome + filename).exists();
 
 	}
-	
-	
 
-	public void save(Object obj,String folderName, String filename) throws IOException {
+	public String save(SendDTO sendDTO) throws IOException {
 
-		String relativePath = folderName+"/"+ filename;
-		
-		if (fileExist(relativePath)) {
-			deleteFile(folderName+"/"+ filename);
+		String relativePath = sendDTO.getUsername() + "\\" + sendDTO.getCategoriaDTO().getNombre();
+		System.out.println("relative path: " + relativePath);
+		if (!fileExist(sendDTO.getUsername())) {
+			System.out.println("folder created: " + sendDTO.getUsername());
+			createFolder(sendDTO.getUsername());
 		}
-			FileOutputStream fileOut;
-			ObjectOutputStream obj_out = null;
-			try {
-				fileOut = new FileOutputStream(relativePath);
-				obj_out = new ObjectOutputStream(fileOut);
-				obj_out.writeObject(obj);
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				obj_out.close();
+		if (fileExist(relativePath)) {
+			System.out.println("file exist?: " + relativePath);
+			deleteFile(relativePath);
+		}
+		FileOutputStream fileOut;
+		ObjectOutputStream obj_out = null;
+		try {
+			fileOut = new FileOutputStream(userHome + relativePath);
+			obj_out = new ObjectOutputStream(fileOut);
+			obj_out.writeObject(sendDTO.getCategoriaDTO());
 
-			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			obj_out.close();
 
+		}
+
+		return "200ok";
 	}
 
 
-//	public CategoriaDTO loadSavedFile(File file) {
-//		if (file.exists()) {
-//			ObjectInputStream ois = null;
-//			try {
-//				ois = new ObjectInputStream(new FileInputStream(file));
-//				return (CategoriaDTO) ois.readObject();
-//
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//
-//			} finally {
-//				try {
-//					if (ois != null)
-//						ois.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//		return null;
-//
-//	}
+	public String loadSavedFile(SendDTO sendDTO) throws IOException {
+		
+
+		File file = new File(userHome+sendDTO.getUsername()+"\\"+sendDTO.getCategoriaDTO().getNombre());
+		String categoriaDTOjson = String.join("\n", Files.readAllLines(Paths.get(file.getAbsolutePath())));
+		
+		
+		return categoriaDTOjson;
 
 
+	}
 
-	public String[] listDirectory() {
-
-		return new File(userHome).list();
+	public String[] listDirectory(String username) {
+		System.out.println(userHome + "\\" + username);
+		return new File(userHome + "\\" + username).list();
 
 	}
 
@@ -136,7 +122,8 @@ public class Persistencia {
 	 * 
 	 * Delete a file using as base the userHome property
 	 * 
-	 * @param filename the file path after the userHome
+	 * @param filename
+	 *            the file path after the userHome
 	 */
 	public void deleteFile(String filename) {
 		File file = new File(userHome + filename);
@@ -144,8 +131,8 @@ public class Persistencia {
 	}
 
 	public void createFolder(String path) {
-		new File(userHome+path).mkdir();
-		
+		new File(userHome + path).mkdir();
+
 	}
 
 }
