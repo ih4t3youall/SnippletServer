@@ -95,14 +95,10 @@ public class Persistencia {
 
 
 	public String loadSavedFile(SendDTO sendDTO) throws IOException {
-		
-
 		File file = new File(userHome+sendDTO.getUsername()+"\\"+sendDTO.getCategoriaDTO().getNombre());
 		String categoriaDTOjson = String.join("\n", Files.readAllLines(Paths.get(file.getAbsolutePath())));
 		
-		
 		return categoriaDTOjson;
-
 
 	}
 
@@ -131,6 +127,7 @@ public class Persistencia {
 	}
 
 	public void createFolder(String path) {
+		System.out.println("create folder: "+userHome+path);
 		new File(userHome + path).mkdir();
 
 	}
