@@ -21,7 +21,7 @@ public class Persistencia {
 	private String userHome;
 
 	public Persistencia() {
-		userHome = System.getProperty("user.home") + "\\" + "SnippletServer" + "\\";
+		userHome = System.getProperty("user.home") + "/" + "SnippletServer" + "/";
 
 	}
 
@@ -33,28 +33,6 @@ public class Persistencia {
 		}
 	}
 
-	// public void saveNewConfiguration(FileConfiguration fileConfiguration)
-	// throws IOException {
-	// File file;
-	// file = new File(fileConfiguration.getConfigurationPrefix());
-	// file.delete();
-	//
-	// file.createNewFile();
-	// FileOutputStream os = new FileOutputStream(file);
-	// ObjectOutputStream oos = new ObjectOutputStream(os);
-	// oos.writeObject(fileConfiguration);
-	// oos.close();
-	// os.close();
-	//
-	// }
-
-	/**
-	 * 
-	 * check if a file exist using as base the userHome property
-	 * 
-	 * @param filename
-	 *            the file path after the userHome
-	 */
 	public boolean fileExist(String filename) {
 		System.out.println("absolute path: " + userHome + filename);
 		return new File(userHome + filename).exists();
@@ -63,7 +41,7 @@ public class Persistencia {
 
 	public String save(SendDTO sendDTO) throws IOException {
 
-		String relativePath = sendDTO.getUsername() + "\\" + sendDTO.getCategoriaDTO().getNombre();
+		String relativePath = sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre();
 		System.out.println("relative path: " + relativePath);
 		if (!fileExist(sendDTO.getUsername())) {
 			System.out.println("folder created: " + sendDTO.getUsername());
@@ -95,7 +73,7 @@ public class Persistencia {
 
 
 	public String loadSavedFile(SendDTO sendDTO) throws IOException {
-		File file = new File(userHome+sendDTO.getUsername()+"\\"+sendDTO.getCategoriaDTO().getNombre());
+		File file = new File(userHome+sendDTO.getUsername()+"/"+sendDTO.getCategoriaDTO().getNombre());
 		String categoriaDTOjson = String.join("\n", Files.readAllLines(Paths.get(file.getAbsolutePath())));
 		
 		return categoriaDTOjson;
@@ -103,8 +81,8 @@ public class Persistencia {
 	}
 
 	public String[] listDirectory(String username) {
-		System.out.println(userHome + "\\" + username);
-		return new File(userHome + "\\" + username).list();
+		System.out.println(userHome + "/" + username);
+		return new File(userHome + "/" + username).list();
 
 	}
 
