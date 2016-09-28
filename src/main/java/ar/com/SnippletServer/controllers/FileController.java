@@ -27,7 +27,7 @@ public class FileController {
 		return "hola";
 		
 	}
-	
+//	{"password":"default","username":"martin","categoriaDTO":{"nombre":"overwatch","tags":null,"snipplets":[{"titulo":"tags","contenido":" M3L#1358 -> milton"}]}}
 	
 	
 	@RequestMapping(value = "/listarArchivos", method = RequestMethod.POST)
