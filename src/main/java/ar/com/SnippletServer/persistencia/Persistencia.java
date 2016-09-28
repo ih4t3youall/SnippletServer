@@ -7,10 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.com.SnippletServer.dto.CategoriaDTO;
 import ar.com.SnippletServer.dto.SendDTO;
@@ -74,9 +74,20 @@ public class Persistencia {
 
 	public String loadSavedFile(SendDTO sendDTO) throws IOException {
 		File file = new File(userHome+sendDTO.getUsername()+"/"+sendDTO.getCategoriaDTO().getNombre());
-		String categoriaDTOjson = String.join("\n", Files.readAllLines(Paths.get(file.getAbsolutePath())));
+
 		
-		return categoriaDTOjson;
+		   FileInputStream fin = new FileInputStream(file.getAbsolutePath());
+		   ObjectInputStream ois = new ObjectInputStream(fin);
+		   try {
+			return new ObjectMapper().writeValueAsString((CategoriaDTO) ois.readObject());
+		} catch (ClassNotFoundException e) {
+			System.out.println("TIRE EXCEPTION!!!");
+			e.printStackTrace();
+		}finally{
+		   ois.close();
+		}
+		
+		return "";
 
 	}
 
