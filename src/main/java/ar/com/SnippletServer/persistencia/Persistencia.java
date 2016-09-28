@@ -10,62 +10,76 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JOptionPane;
 
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class Persistencia {
 
 
-	private String prefix;
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+	private String userHome;
+	
+	
+	public Persistencia(){
+		userHome = System.getProperty("user.home") + "/";
+		
 	}
 
-	public void crearCategoria(String filename) throws IOException {
 
-		File file = new File(prefix + filename);
-		if (!existeArchivo(filename)) {
+	public void createCategory(String filename) throws IOException {
+
+		File file = new File(userHome + filename);
+		if (!fileExist(filename)) {
 			file.createNewFile();
 		}
 	}
 
 
-	public void saveNewConfiguration(FileConfiguration fileConfiguration)
-			throws IOException {
-		File file;
-			file = new File(fileConfiguration.getConfigurationPrefix());
-		file.delete();
+//	public void saveNewConfiguration(FileConfiguration fileConfiguration)
+//			throws IOException {
+//		File file;
+//			file = new File(fileConfiguration.getConfigurationPrefix());
+//		file.delete();
+//		
+//		file.createNewFile();
+//		FileOutputStream os = new FileOutputStream(file);
+//		ObjectOutputStream oos = new ObjectOutputStream(os);
+//		oos.writeObject(fileConfiguration);
+//		oos.close();
+//		os.close();
+//
+//	}
+
+
+	
+	
+
+
+	/**
+	 * 
+	 * check if a file exist using as base the userHome property
+	 * 
+	 * @param filename the file path after the userHome
+	 */
+	public boolean fileExist(String filename) {
+
+		return new File(userHome + filename).exists();
+
+	}
+	
+	
+
+	public void save(Object obj,String folderName, String filename) throws IOException {
+
+		String relativePath = folderName+"/"+ filename;
 		
-		file.createNewFile();
-		FileOutputStream os = new FileOutputStream(file);
-		ObjectOutputStream oos = new ObjectOutputStream(os);
-		oos.writeObject(fileConfiguration);
-		oos.close();
-		os.close();
-
-	}
-
-
-	
-	
-
-
-
-	public boolean existeArchivo(String filename) {
-
-		return new File(prefix + filename).exists();
-
-	}
-	
-	
-
-	public void guardar(Object obj, String filename) throws IOException {
-
-		if (existeArchivo(filename)) {
+		if (fileExist(relativePath)) {
+			deleteFile(folderName+"/"+ filename);
+		}
 			FileOutputStream fileOut;
 			ObjectOutputStream obj_out = null;
 			try {
-				fileOut = new FileOutputStream(prefix + filename);
+				fileOut = new FileOutputStream(relativePath);
 				obj_out = new ObjectOutputStream(fileOut);
 				obj_out.writeObject(obj);
 
@@ -78,58 +92,59 @@ public class Persistencia {
 
 			}
 
-		} else {
-
-			JOptionPane.showMessageDialog(null, "Error el archivo no existe!.");
-
-		}
 	}
 
 
-	public CategoriaDTO recuperarArchivoGuardado(File file) {
-		if (file.exists()) {
-			ObjectInputStream ois = null;
-			try {
-				ois = new ObjectInputStream(new FileInputStream(file));
-				return (CategoriaDTO) ois.readObject();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-
-			} finally {
-				try {
-					if (ois != null)
-						ois.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-
-	}
+//	public CategoriaDTO loadSavedFile(File file) {
+//		if (file.exists()) {
+//			ObjectInputStream ois = null;
+//			try {
+//				ois = new ObjectInputStream(new FileInputStream(file));
+//				return (CategoriaDTO) ois.readObject();
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//
+//			} finally {
+//				try {
+//					if (ois != null)
+//						ois.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		return null;
+//
+//	}
 
 
 
 	public String[] listDirectory() {
 
-		return new File(prefix).list();
+		return new File(userHome).list();
 
 	}
 
-	public void eliminarYCrearArchivo(String filename) throws IOException {
-		File file = new File(prefix + filename);
+	public void deleteAndCreateFile(String filename) throws IOException {
+		File file = new File(userHome + filename);
 		file.delete();
 		file.createNewFile();
 	}
 
+	/**
+	 * 
+	 * Delete a file using as base the userHome property
+	 * 
+	 * @param filename the file path after the userHome
+	 */
 	public void deleteFile(String filename) {
-		File file = new File(prefix + filename);
+		File file = new File(userHome + filename);
 		file.delete();
 	}
 
-	public void createFolder(String newPrefix) {
-		new File(newPrefix).mkdir();
+	public void createFolder(String path) {
+		new File(userHome+path).mkdir();
 		
 	}
 
