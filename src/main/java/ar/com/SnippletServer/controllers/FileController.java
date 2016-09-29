@@ -69,6 +69,14 @@ public class FileController {
 	}
 	
 	
+	@RequestMapping(value ="/deleteCategory", method = RequestMethod.POST)
+	public void deleteCategory(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException{
+		SendDTO sendDTO = objMapper.readValue(json, SendDTO.class);
+		
+		persistencia.deleteCategory(sendDTO);
+		
+	}
+	
 	
 	
 	

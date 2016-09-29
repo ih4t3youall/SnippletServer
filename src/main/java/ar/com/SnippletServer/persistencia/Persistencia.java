@@ -121,4 +121,9 @@ public class Persistencia {
 
 	}
 
+	public void deleteCategory(SendDTO sendDTO) {
+		deleteFile(sendDTO.getUsername()+"/"+sendDTO.getCategoriaDTO().getNombre());
+		
+	}
+
 }
