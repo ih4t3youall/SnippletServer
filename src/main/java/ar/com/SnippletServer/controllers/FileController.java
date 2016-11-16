@@ -11,73 +11,120 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.corba.se.impl.ior.WireObjectKeyTemplate;
 
-import ar.com.SnippletServer.dto.CategoriaDTO;
+import ar.com.SnippletServer.dao.UserDAO;
+import ar.com.SnippletServer.domain.User;
 import ar.com.SnippletServer.dto.SendDTO;
 import ar.com.SnippletServer.persistencia.Persistencia;
 
 @RestController
 public class FileController {
-	
-	
-	
-	
+
 	@Autowired
 	private Persistencia persistencia;
-	
+
+	@Autowired
+	private UserDAO userDAO;
+
 	private ObjectMapper objMapper = new ObjectMapper();
-	
-	@RequestMapping("/")
-	public String index(){
-		return "hola";
-		
+
+	private boolean login(SendDTO sendDTO) {
+
+		User user = userDAO.getUser(sendDTO.getUsername());
+
+		if(user == null){
+			
+			userDAO.save(new User(sendDTO.getUsername(),sendDTO.getPassword()));
+			user = new User(sendDTO.getUsername(),sendDTO.getPassword());
+			
+		}
+		if (user.getName().equals(sendDTO.getUsername()) && user.getPassword().equals(sendDTO.getPassword())) {
+
+			return true;
+
+		} else {
+
+			return false;
+
+		}
+
 	}
-//	{"password":"default","username":"martin","categoriaDTO":{"nombre":"overwatch","tags":null,"snipplets":[{"titulo":"tags","contenido":" M3L#1358 -> milton"}]}}
-	
-	
+
 	@RequestMapping(value = "/guardarCategoria", method = RequestMethod.POST)
-	public String guardarCategoria(@RequestBody String username) throws IOException {
-
+	public String guardarCategoria(@RequestBody String username)
+			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper objMapper = new ObjectMapper();
-		
-		String response = persistencia.save(objMapper.readValue(username, SendDTO.class));
-		return response;
+		SendDTO sendDTO = objMapper.readValue(username, SendDTO.class);
+		boolean logeado = login(sendDTO);
+
+		if (logeado) {
+
+			String response = persistencia.save(sendDTO);
+			return response;
+		} else {
+			String[] respuesta = new String[1];
+			respuesta[0] = "usuario contraseña incorrecto";
+			return objMapper.writeValueAsString(respuesta);
+		}
 	}
 
-	
 	@RequestMapping(value = "/listarServer", method = RequestMethod.POST)
-	public String listarServer(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException{
-		
+	public String listarServer(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException {
+
 		SendDTO sendDTO = objMapper.readValue(json, SendDTO.class);
-		String[] listDirectory = persistencia.listDirectory(sendDTO.getUsername());
-		String writeValueAsString = objMapper.writeValueAsString(listDirectory);
-		return writeValueAsString;
+		boolean logeado = login(sendDTO);
+		if (logeado) {
+			String[] listDirectory = persistencia.listDirectory(sendDTO.getUsername());
+			String writeValueAsString = objMapper.writeValueAsString(listDirectory);
+			return writeValueAsString;
+		} else {
+
+			String[] respuesta = new String[1];
+			respuesta[0] = "usuario contraseña incorrecto";
+			String writeValueAsString = objMapper.writeValueAsString(respuesta);
+			return writeValueAsString;
+
+		}
 	}
-	
+
 	@RequestMapping(value = "/returnCategory", method = RequestMethod.POST)
-	public String returnCategory(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException{
-		
+	public String returnCategory(@RequestBody String json)
+			throws JsonParseException, JsonMappingException, IOException {
+
 		SendDTO sendDTO = objMapper.readValue(json, SendDTO.class);
-		String loadSavedFile = persistencia.loadSavedFile(sendDTO);
-		
-		System.out.println("valor que devuelve: "+loadSavedFile);
-		
-		
-		
-		return loadSavedFile;
+
+		if (login(sendDTO)) {
+			String loadSavedFile = persistencia.loadSavedFile(sendDTO);
+
+			System.out.println("valor que devuelve: " + loadSavedFile);
+
+			return loadSavedFile;
+		} else {
+
+			String[] respuesta = new String[1];
+			respuesta[0] = "usuario contraseña incorrecto";
+			String writeValueAsString = objMapper.writeValueAsString(respuesta);
+			return writeValueAsString;
+
+		}
 	}
-	
-	
-	@RequestMapping(value ="/deleteCategory", method = RequestMethod.POST)
-	public void deleteCategory(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException{
+
+	@RequestMapping(value = "/deleteCategory", method = RequestMethod.POST)
+	public void deleteCategory(@RequestBody String json) throws JsonParseException, JsonMappingException, IOException {
 		SendDTO sendDTO = objMapper.readValue(json, SendDTO.class);
-		
-		persistencia.deleteCategory(sendDTO);
-		
+
+		if (login(sendDTO)) {
+
+			persistencia.deleteCategory(sendDTO);
+
+		} else {
+
+			String[] respuesta = new String[1];
+			respuesta[0] = "usuario contraseña incorrecto";
+			String writeValueAsString = objMapper.writeValueAsString(respuesta);
+
+		}
+
 	}
-	
-	
-	
-	
+
 }
