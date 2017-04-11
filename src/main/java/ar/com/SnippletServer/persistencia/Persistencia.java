@@ -71,23 +71,38 @@ public class Persistencia {
 		return "200ok";
 	}
 
-
 	public String loadSavedFile(SendDTO sendDTO) throws IOException {
-		File file = new File(userHome+sendDTO.getUsername()+"/"+sendDTO.getCategoriaDTO().getNombre());
-
-		
-		   FileInputStream fin = new FileInputStream(file.getAbsolutePath());
-		   ObjectInputStream ois = new ObjectInputStream(fin);
-		   try {
+		File file = new File(userHome + sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre());
+		FileInputStream fin = new FileInputStream(file.getAbsolutePath());
+		ObjectInputStream ois = new ObjectInputStream(fin);
+		try {
 			return new ObjectMapper().writeValueAsString((CategoriaDTO) ois.readObject());
 		} catch (ClassNotFoundException e) {
 			System.out.println("TIRE EXCEPTION!!!");
 			e.printStackTrace();
-		}finally{
-		   ois.close();
+		} finally {
+			ois.close();
 		}
-		
+
 		return "";
+
+	}
+	
+	
+	public CategoriaDTO loadSavedFileForWeb(SendDTO sendDTO) throws IOException {
+		File file = new File(userHome + sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre());
+		FileInputStream fin = new FileInputStream(file.getAbsolutePath());
+		ObjectInputStream ois = new ObjectInputStream(fin);
+		try {
+			return (CategoriaDTO) ois.readObject();
+		} catch (ClassNotFoundException e) {
+			System.out.println("TIRE EXCEPTION!!!");
+			e.printStackTrace();
+		} finally {
+			ois.close();
+		}
+
+		return null;
 
 	}
 
@@ -116,14 +131,14 @@ public class Persistencia {
 	}
 
 	public void createFolder(String path) {
-		System.out.println("create folder: "+userHome+path);
+		System.out.println("create folder: " + userHome + path);
 		new File(userHome + path).mkdir();
 
 	}
 
 	public void deleteCategory(SendDTO sendDTO) {
-		deleteFile(sendDTO.getUsername()+"/"+sendDTO.getCategoriaDTO().getNombre());
-		
+		deleteFile(sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre());
+
 	}
 
 }
