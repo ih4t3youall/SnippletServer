@@ -45,9 +45,18 @@ public class MainController {
 		mav.addObject("lista", array);
 		return mav;
 	}
+	
+	@RequestMapping("login")
+	public ModelAndView login(){
+		ModelAndView mav = new ModelAndView("login/login");
+		return mav;
+		
+		
+		
+	}
 
 	@RequestMapping(value = "/devolverCategoria", method = RequestMethod.POST)
-	public String returnCategory(@RequestBody String nombreCategoria)
+	public ModelAndView returnCategory(@RequestBody String nombreCategoria)
 			throws JsonParseException, JsonMappingException, IOException {
 
 		SendDTO sendDTO = new SendDTO();
@@ -56,7 +65,10 @@ public class MainController {
 		categoriaDTO.setNombre(nombreCategoria);
 		sendDTO.setCategoriaDTO(categoriaDTO);
 		CategoriaDTO categoriaDTO1 = persistencia.loadSavedFileForWeb(sendDTO);categoriaDTO1.getSnipplets();
-		return null;
+		ModelAndView mav = new ModelAndView("frameSnipplet");
+		mav.addObject("snipplets",categoriaDTO1.getSnipplets());
+		
+		return mav;
 	}
 
 }

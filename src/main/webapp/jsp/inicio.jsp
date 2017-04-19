@@ -5,14 +5,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script src="resources/jquery.js"></script>
+<!-- <script src="resources/jquery.js"></script> -->
+<script src="resources/simpleModal/jquery.js"></script>
+<script src="resources/simpleModal/jquery.simplemodal.js"></script>
+<script src="resources/simpleModal/osx.js"></script>
+<link href="resources/simpleModal/osx.css" rel="stylesheet">
+<link href="resources/simpleModal/demo.css" rel="stylesheet">
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <link href="resources/jquery-ui-1.12.1.custom/jquery-ui.css"
 	rel="stylesheet">
 
 
-<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+
 <title>Insert title here</title>
 
 <style>
@@ -44,7 +54,8 @@ nav ul {
 			url : "devolverCategoria",
 			data : item,
 			success : function(data) {
-				console.log("gg");
+				$("#frameSnipplet").empty();
+				$("#frameSnipplet").append(data);
 
 			},
 			error : function(e) {
@@ -57,12 +68,11 @@ nav ul {
 		});
 
 	}
-	
-	
 </script>
 
 </head>
 <body>
+
 
 	<div class="limit"></div>
 	<nav>
@@ -76,9 +86,7 @@ nav ul {
 					</c:forEach>
 				</ul>
 			</div>
-			<div class="col-md-4">
-				<h1>something</h1>
-			</div>
+			<div class="col-md-4" id="frameSnipplet"></div>
 			<div class="col-md-2"></div>
 		</div>
 	</ul>
