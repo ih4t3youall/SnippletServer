@@ -73,10 +73,11 @@ nav ul {
 </head>
 <body>
 
-<form th:action="@{/logout}" method="get">
-			<button class="btn btn-md btn-danger btn-block" name="registration"
-				type="Submit">Logout</button>
-		</form>  
+<a href="<c:url value="/logout" />">
+			<button class="btn btn-md btn-danger btn-block" name="logout"
+				>Logout</button>
+  </a>
+		
 	<div class="limit"></div>
 	<nav>
 	<ul>
