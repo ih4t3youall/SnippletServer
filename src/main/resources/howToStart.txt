@@ -7,7 +7,7 @@ use snippletServer;
 
 select * from user;
 
-insert into user values(1,1,"martin","matin");
+insert into USER values(1,1,"martin","matin");
 
 INSERT INTO `role` VALUES (1,'ADMIN');
 
