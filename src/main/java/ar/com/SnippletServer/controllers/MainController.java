@@ -46,14 +46,14 @@ public class MainController {
 		return mav;
 	}
 	
-	@RequestMapping("login")
-	public ModelAndView login(){
-		ModelAndView mav = new ModelAndView("login/login");
-		return mav;
-		
-		
-		
-	}
+//	@RequestMapping("login")
+//	public ModelAndView login(){
+//		ModelAndView mav = new ModelAndView("login/login");
+//		return mav;
+//		
+//		
+//		
+//	}
 
 	@RequestMapping(value = "/devolverCategoria", method = RequestMethod.POST)
 	public ModelAndView returnCategory(@RequestBody String nombreCategoria)
