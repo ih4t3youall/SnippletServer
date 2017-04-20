@@ -26,7 +26,6 @@ import ar.com.SnippletServer.persistencia.Persistencia;
 @Controller
 public class MainController {
 
-	private String TEST_CONSTANT = "martin";
 
 	@Autowired
 	private Persistencia persistencia;
@@ -44,22 +43,16 @@ public class MainController {
 	@RequestMapping("/listar")
 	public ModelAndView listar() throws IOException {
 		ModelAndView mav = new ModelAndView("inicio");
-		String[] listDirectory = persistencia.listDirectory(TEST_CONSTANT);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();
+		
+		String[] listDirectory = persistencia.listDirectory(name);
 		String writeValueAsString = objMapper.writeValueAsString(listDirectory);
 		ObjectMapper map = new ObjectMapper();
 		String[] array = map.readValue(writeValueAsString, String[].class);
 		mav.addObject("lista", array);
 		return mav;
 	}
-	
-//	@RequestMapping("login")
-//	public ModelAndView login(){
-//		ModelAndView mav = new ModelAndView("login/login");
-//		return mav;
-//		
-//		
-//		
-//	}
 	
 	@RequestMapping(value="/logout", method = RequestMethod.GET)
 	public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
@@ -75,7 +68,9 @@ public class MainController {
 			throws JsonParseException, JsonMappingException, IOException {
 
 		SendDTO sendDTO = new SendDTO();
-		sendDTO.setUsername(TEST_CONSTANT);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();
+		sendDTO.setUsername(name);
 		CategoriaDTO categoriaDTO = new CategoriaDTO();
 		categoriaDTO.setNombre(nombreCategoria);
 		sendDTO.setCategoriaDTO(categoriaDTO);
