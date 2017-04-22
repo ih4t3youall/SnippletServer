@@ -5,14 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- <script src="resources/jquery.js"></script> -->
-<script src="resources/simpleModal/jquery.js"></script>
-<script src="resources/simpleModal/jquery.simplemodal.js"></script>
-<script src="resources/simpleModal/osx.js"></script>
-<link href="resources/simpleModal/osx.css" rel="stylesheet">
-<link href="resources/simpleModal/demo.css" rel="stylesheet">
+<script src="resources/jquery.js"></script>
 <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
 <script src="resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <link href="resources/jquery-ui-1.12.1.custom/jquery-ui.css"
@@ -68,10 +62,16 @@ nav ul {
 		});
 
 	}
+	
+	function modal(){
+		$('#myModal').modal('show');
+	}
 </script>
 
 </head>
 <body>
+
+
 
 <a href="<c:url value="/logout" />">
 			<button class="btn btn-md btn-danger btn-block" name="logout"

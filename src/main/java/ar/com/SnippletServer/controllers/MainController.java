@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ar.com.SnippletServer.dto.CategoriaDTO;
 import ar.com.SnippletServer.dto.SendDTO;
 import ar.com.SnippletServer.persistencia.Persistencia;
+import ar.com.SnippletServer.utilities.GsonUtility;
 
 @Controller
 public class MainController {
@@ -32,6 +33,9 @@ public class MainController {
 
 	private ObjectMapper objMapper = new ObjectMapper();
 
+	@Autowired
+	private GsonUtility gsonUtility;
+	
 	@RequestMapping("/inicio")
 	public ModelAndView main() {
 
@@ -62,6 +66,21 @@ public class MainController {
 	    }
 	    return "redirect:/login?logout";//You can redirect wherever you want, but generally it's a good practice to show login screen again.
 	}
+	
+	@RequestMapping(value ="/salvarCategoria" , method = RequestMethod.POST)
+	public String guardarCategoria(@RequestBody String sendable) throws JsonParseException, JsonMappingException, IOException{
+		ObjectMapper obj = new ObjectMapper();
+		CategoriaDTO categoriaDTO = gsonUtility.getGson().fromJson(sendable, CategoriaDTO.class);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();
+		SendDTO sendDTO = new SendDTO();
+		sendDTO.setUsername(name);
+		sendDTO.setCategoriaDTO(categoriaDTO);
+		String response = persistencia.save(sendDTO);
+		
+		
+		return response;
+	}
 
 	@RequestMapping(value = "/devolverCategoria", method = RequestMethod.POST)
 	public ModelAndView returnCategory(@RequestBody String nombreCategoria)
@@ -74,9 +93,10 @@ public class MainController {
 		CategoriaDTO categoriaDTO = new CategoriaDTO();
 		categoriaDTO.setNombre(nombreCategoria);
 		sendDTO.setCategoriaDTO(categoriaDTO);
-		CategoriaDTO categoriaDTO1 = persistencia.loadSavedFileForWeb(sendDTO);categoriaDTO1.getSnipplets();
+		CategoriaDTO categoriaDTO1 = persistencia.loadSavedFileForWeb(sendDTO);
 		ModelAndView mav = new ModelAndView("frameSnipplet");
 		mav.addObject("snipplets",categoriaDTO1.getSnipplets());
+		mav.addObject("categoriaId",categoriaDTO1.getNombre());
 		
 		return mav;
 	}
