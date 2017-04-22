@@ -41,7 +41,7 @@ public class Persistencia {
 
 	public String save(SendDTO sendDTO) throws IOException {
 
-		String relativePath = sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre();
+		String relativePath = sendDTO.getUsername() + "/" + sendDTO.getCategoriaDTO().getNombre().trim();
 		System.out.println("relative path: " + relativePath);
 		if (!fileExist(sendDTO.getUsername())) {
 			System.out.println("folder created: " + sendDTO.getUsername());

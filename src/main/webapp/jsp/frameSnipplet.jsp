@@ -10,8 +10,10 @@
 
 		contenido = $(item).find(".contenido").html();
 		titulo = $(item).find("#titulo").html();
+		categoria = $(item).find(".categoriaId").html();
+		
 		clear();
-
+		$(".modal-categoria").append(categoria);
 		$(".modal-title").append(titulo);
 		$(".modal-body").append(contenido);
 		$('#myModal').modal('show');
@@ -41,12 +43,15 @@
 			}
 
 		});
+		cerrarModalConModificaciones();
 	}
 
 	function cerrarModalConModificaciones() {
 
 		var categoria = new Object();
-		var categoriaNombre = $(".snipplets").find(".categoriaId").html();
+// 		var categoriaNombre = $(".snipplets").find(".categoriaId").html();
+		var categoriaNombre = $(".modal-categoria").html();
+		console.log(categoriaNombre);
 		categoria.nombre = categoriaNombre;
 		categoria.snipplets = [];
 		$(".snipplets").each(function(index, item) {
@@ -66,9 +71,7 @@
 			contentType : "application/json",
 			data : sendable,
 			success : function(data) {
-				$("#refreshMaquina").val($("#idMaquina").html());
-				$("#refreshProyecto").val($("#idProyecto").html());
-				$("#refreshForm").submit();
+				
 			}
 		});
 	}
@@ -78,6 +81,7 @@
 		$("#snippletId").empty();
 		$(".modal-title").empty();
 		$(".modal-body").empty();
+		$("modal-categoria").empty();
 	}
 </script>
 
@@ -85,10 +89,6 @@
 <body>
 	<!-- probando modal -->
 	<div class="container">
-		<h2>Basic Modal Example</h2>
-		<!-- Trigger the modal with a button -->
-		<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-			data-target="#myModal">Open Modal</button>
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" role="dialog">
 			<div class="modal-dialog">
@@ -96,6 +96,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 style="visibility: hidden;" class="modal-categoria"></h4>
 						<h4 class="modal-title">Modal Header</h4>
 					</div>
 					<div class="modal-body">
