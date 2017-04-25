@@ -11,11 +11,11 @@
 		contenido = $(item).find(".contenido").html();
 		titulo = $(item).find("#titulo").html();
 		categoria = $(item).find(".categoriaId").html();
-		
+
 		clear();
 		$(".modal-categoria").append(categoria);
 		$(".modal-title").append(titulo);
-		$(".modal-body").append(contenido);
+		$(".modal-contenido").val(contenido);
 		$('#myModal').modal('show');
 
 	}
@@ -37,7 +37,7 @@
 	function deleteModal(este) {
 		var aborrar = $(".modal-title").html();
 		$("li").each(function(index, item) {
-			if ($(item).find("#titulo").html()==aborrar) {
+			if ($(item).find("#titulo").html() == aborrar) {
 				$(item).remove();
 				console.log("pase");
 			}
@@ -46,14 +46,44 @@
 		cerrarModalConModificaciones();
 	}
 
+	function modalClose() {
+		var snippletName = $(".modal-title").html();
+		var snippletContent = $(".modal-contenido").val();
+		var categoriaName = $(".modal-categoria").html();
+		console.log("snippletName");
+		console.log(snippletName);
+		console.log("snipplet content");
+		console.log(snippletContent);
+		console.log("categoria name");
+		console.log(categoriaName);
+		
+		$(".list-group-item.snipplets").each(function(index, item) {
+
+			if (snippletName == $(item).find("#titulo").html()){
+				console.log("borre contenido"+" titulo: "+ $(item).find("#titulo").html()+" snippletname: "+snippletName);
+				$(item).find(".contenido").empty();
+				$(item).find(".contenido").append(snippletContent);
+				
+			}
+
+				
+		});
+		
+		$('#myModal').modal('hide');
+		cerrarModalConModificaciones();
+		clear();
+
+	}
+
 	function cerrarModalConModificaciones() {
 
 		var categoria = new Object();
-// 		var categoriaNombre = $(".snipplets").find(".categoriaId").html();
+		// 		var categoriaNombre = $(".snipplets").find(".categoriaId").html();
 		var categoriaNombre = $(".modal-categoria").html();
 		console.log(categoriaNombre);
 		categoria.nombre = categoriaNombre;
 		categoria.snipplets = [];
+
 		$(".snipplets").each(function(index, item) {
 			var snipplet = new Object();
 			var titulo = $(item).find("#titulo").html();
@@ -71,7 +101,7 @@
 			contentType : "application/json",
 			data : sendable,
 			success : function(data) {
-				
+
 			}
 		});
 	}
@@ -80,8 +110,8 @@
 		$("#categoriaId").empty();
 		$("#snippletId").empty();
 		$(".modal-title").empty();
-		$(".modal-body").empty();
-		$("modal-categoria").empty();
+		$(".modal-contenido").val("");
+		$(".modal-categoria").empty();
 	}
 </script>
 
@@ -100,10 +130,13 @@
 						<h4 class="modal-title">Modal Header</h4>
 					</div>
 					<div class="modal-body">
-						<p>Some text in the modal.</p>
+						<textarea rows="4" cols="50" class="modal-contenido">
+ 							
+							</textarea>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default"
+							onclick="modalClose()">Close</button>
 						<button type="button" class="btn btn-default" onclick="copy()">Copy</button>
 						<button type="button" class="btn btn-default"
 							onclick="deleteModal(this)">Delete</button>
