@@ -8,13 +8,14 @@
 <script type="text/javascript">
 	function copiar(item) {
 
-		contenido = $(item).find(".contenido").html();
-		titulo = $(item).find("#titulo").html();
-		categoria = $(item).find(".categoriaId").html();
+		contenido = $(item).find(".contenido").html().trim();
+		titulo = $(item).find("#titulo").html().trim();
+		categoria = $(item).find(".categoriaId").html().trim();
 
 		clear();
 		$(".modal-categoria").append(categoria);
-		$(".modal-title").append(titulo);
+		$(".modal-title-input").val(titulo);
+		$(".modal-title-bkup").html(titulo);
 		$(".modal-contenido").val(contenido);
 		$('#myModal').modal('show');
 
@@ -35,11 +36,10 @@
 	}
 
 	function deleteModal(este) {
-		var aborrar = $(".modal-title").html();
+		var aborrar = $(".modal-title-input").val();
 		$("li").each(function(index, item) {
 			if ($(item).find("#titulo").html() == aborrar) {
 				$(item).remove();
-				console.log("pase");
 			}
 
 		});
@@ -47,40 +47,47 @@
 	}
 
 	function modalClose() {
-		var snippletName = $(".modal-title").html();
+		var snippletName = $(".modal-title-input").val();
 		var snippletContent = $(".modal-contenido").val();
 		var categoriaName = $(".modal-categoria").html();
-		console.log("snippletName");
-		console.log(snippletName);
-		console.log("snipplet content");
-		console.log(snippletContent);
-		console.log("categoria name");
-		console.log(categoriaName);
-		
+
 		$(".list-group-item.snipplets").each(function(index, item) {
 
-			if (snippletName == $(item).find("#titulo").html()){
-				console.log("borre contenido"+" titulo: "+ $(item).find("#titulo").html()+" snippletname: "+snippletName);
+			if (snippletName == $(item).find("#titulo").html()) {
 				$(item).find(".contenido").empty();
 				$(item).find(".contenido").append(snippletContent);
-				
+
 			}
 
-				
 		});
-		
+
 		$('#myModal').modal('hide');
 		cerrarModalConModificaciones();
 		clear();
 
 	}
 
+	function actualizarTitulo(){
+		
+		var tituloViejo = $(".modal-title-bkup").html();
+		
+		$(".snipplets").each(function(index, item) {
+			var snipplet = new Object();
+			var titulo = $(item).find("#titulo").html();
+			if(titulo == tituloViejo){
+				$(item).find("#titulo").html($(".modal-title-input").val());
+				
+			}
+		});
+		
+	}
+	
 	function cerrarModalConModificaciones() {
 
+		actualizarTitulo();
+		
 		var categoria = new Object();
-		// 		var categoriaNombre = $(".snipplets").find(".categoriaId").html();
 		var categoriaNombre = $(".modal-categoria").html();
-		console.log(categoriaNombre);
 		categoria.nombre = categoriaNombre;
 		categoria.snipplets = [];
 
@@ -92,7 +99,6 @@
 			snipplet.contenido = contenido;
 			categoria.snipplets.push(snipplet);
 		});
-
 		var sendable = JSON.stringify(categoria);
 
 		$.ajax({
@@ -109,15 +115,16 @@
 	function clear() {
 		$("#categoriaId").empty();
 		$("#snippletId").empty();
-		$(".modal-title").empty();
+		$(".modal-title-input").val("");
 		$(".modal-contenido").val("");
 		$(".modal-categoria").empty();
+		$(".modal-title-bkup").empty();
 	}
 </script>
 
 </head>
 <body>
-	<!-- probando modal -->
+	<!-- modal mostrar snipplet -->
 	<div class="container">
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" role="dialog">
@@ -127,7 +134,10 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 style="visibility: hidden;" class="modal-categoria"></h4>
-						<h4 class="modal-title">Modal Header</h4>
+						<h4 style="visibility: hidden;" class="modal-title-bkup"></h4>
+						<h4 class="modal-title">
+							<input type="text" class="modal-title-input"></input>
+						</h4>
 					</div>
 					<div class="modal-body">
 						<textarea rows="4" cols="50" class="modal-contenido">
@@ -145,11 +155,14 @@
 			</div>
 		</div>
 	</div>
-	<!-- fin probando modal -->
+	<!-- fin mostrando snipplet -->
+
+
+
 	<ul class="list-group ">
 		<c:forEach items="${snipplets}" var="item">
 			<li class="list-group-item snipplets" onclick="copiar(this)"><span
-				id="titulo">${item.titulo} </span> <span style="visibility: hidden;"
+				id="titulo">${item.titulo}</span> <span style="visibility: hidden;"
 				class="categoriaId">${categoriaId} </span><br />
 				<div class="contenido">${item.contenido}</div></li>
 		</c:forEach>

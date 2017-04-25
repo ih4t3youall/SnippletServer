@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -68,18 +70,16 @@ public class MainController {
 	}
 	
 	@RequestMapping(value ="/salvarCategoria" , method = RequestMethod.POST)
-	public String guardarCategoria(@RequestBody String sendable) throws JsonParseException, JsonMappingException, IOException{
-		ObjectMapper obj = new ObjectMapper();
+	@ResponseStatus(value = HttpStatus.OK)
+	public void guardarCategoria(@RequestBody String sendable) throws JsonParseException, JsonMappingException, IOException{
 		CategoriaDTO categoriaDTO = gsonUtility.getGson().fromJson(sendable, CategoriaDTO.class);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName();
 		SendDTO sendDTO = new SendDTO();
 		sendDTO.setUsername(name);
 		sendDTO.setCategoriaDTO(categoriaDTO);
-		String response = persistencia.save(sendDTO);
+		persistencia.save(sendDTO);
 		
-		
-		return response;
 	}
 
 	@RequestMapping(value = "/devolverCategoria", method = RequestMethod.POST)
