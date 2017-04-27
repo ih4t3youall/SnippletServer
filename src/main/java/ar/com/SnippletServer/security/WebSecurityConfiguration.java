@@ -46,6 +46,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.
 			authorizeRequests()
 				.antMatchers("/").permitAll()
+				.antMatchers("/guardarCategoria").permitAll()
+				.antMatchers("/listarServer").permitAll()
+				.antMatchers("/returnCategory").permitAll()
+				.antMatchers("/deleteCategory").permitAll()
 				.antMatchers("/login").permitAll()
 				.antMatchers("/registration").permitAll()
 				.antMatchers("/listar/**").hasAuthority("ADMIN").anyRequest()
