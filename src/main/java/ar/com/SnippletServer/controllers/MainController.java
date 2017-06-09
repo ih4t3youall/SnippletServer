@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ar.com.SnippletServer.dto.ButtonDTO;
 import ar.com.SnippletServer.dto.CategoriaDTO;
 import ar.com.SnippletServer.dto.SendDTO;
 import ar.com.SnippletServer.persistencia.Persistencia;
@@ -84,7 +85,7 @@ public class MainController {
 
 	@RequestMapping(value = "/devolverCategoria", method = RequestMethod.POST)
 	public ModelAndView returnCategory(@RequestBody String nombreCategoria)
-			throws JsonParseException, JsonMappingException, IOException {
+			throws JsonParseException, JsonMappingException {
 
 		SendDTO sendDTO = new SendDTO();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -93,12 +94,42 @@ public class MainController {
 		CategoriaDTO categoriaDTO = new CategoriaDTO();
 		categoriaDTO.setNombre(nombreCategoria);
 		sendDTO.setCategoriaDTO(categoriaDTO);
-		CategoriaDTO categoriaDTO1 = persistencia.loadSavedFileForWeb(sendDTO);
+		CategoriaDTO categoriaDTO1=null;
 		ModelAndView mav = new ModelAndView("frameSnipplet");
+		try {
+			categoriaDTO1 = persistencia.loadSavedFileForWeb(sendDTO);
+		} catch (IOException e) {
+			
+			mav = new ModelAndView("components/button");
+			ButtonDTO buttonDTO = new ButtonDTO();
+			buttonDTO.setOnClick("getNewSniipletModal('"+nombreCategoria+"')");
+			buttonDTO.setType("button");
+			buttonDTO.setValue("agregar snipplet");
+			mav.addObject("buttonDTO",buttonDTO);
+			return mav;
+		}
 		mav.addObject("snipplets",categoriaDTO1.getSnipplets());
 		mav.addObject("categoriaId",categoriaDTO1.getNombre());
 		
 		return mav;
 	}
-
+	
+	
+	@RequestMapping(value = "getNewSnippletModal")
+	public ModelAndView getNewSnippletModal(@RequestBody String categoriaDTO){
+		System.out.println("something");
+		return null;
+	}
+	
+	@RequestMapping(value = "createSnipplet", method = RequestMethod.POST)
+	public ModelAndView createSnipplet(){
+		
+		
+		System.out.println("asd");
+		return null;
+		
+	}
+	
+	
+	
 }

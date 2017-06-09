@@ -111,6 +111,8 @@
 			}
 		});
 	}
+	
+	
 
 	function clear() {
 		$("#categoriaId").empty();
@@ -120,6 +122,9 @@
 		$(".modal-categoria").empty();
 		$(".modal-title-bkup").empty();
 	}
+	
+	
+	
 </script>
 
 </head>
@@ -159,7 +164,7 @@
 
 
 
-	<ul class="list-group ">
+	<ul id="list-snipplets" class="list-group ">
 		<c:forEach items="${snipplets}" var="item">
 			<li class="list-group-item snipplets" onclick="copiar(this)"><span
 				id="titulo">${item.titulo}</span> <span style="visibility: hidden;"

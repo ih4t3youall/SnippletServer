@@ -52,9 +52,9 @@ nav ul {
 				$("#frameSnipplet").append(data);
 
 			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-				console.log(e);
+			error : function(data) {
+				$("#frameSnipplet").empty();
+				$("#frameSnipplet").append(data);
 			},
 			done : function(e) {
 				console.log("DONE");
@@ -63,22 +63,64 @@ nav ul {
 
 	}
 	
+	function getDynamicContent(url,datos){
+		$.ajax({
+			url : url,
+			type : "POST",
+			contentType : "application/json",
+			data : datos,
+			success : function(data) {
+				$('.list-group').append(data);
+				
+			}
+		});
+		
+	}
+
+	
 	function modal(){
 		$('#myModal').modal('show');
 	}
-</script>
+	
+	
+	function modalAgregarCategoria(){
+		$('#modal-agregar-categoria').modal('show');
+		
+		
+	}
+	
+	
+function getNewSniipletModal(nombreCategoria){
+		console.log(nose);
+		
+
+		$.ajax({
+			url : "getNewSnippletModal",
+			type : "POST",
+			contentType : "application/json",
+			data : nombreCategoria,
+			success : function(data) {
+
+			}
+		});
+		
+	}
+	
+	</script>
 
 </head>
 <body>
 
 
-
+ <jsp:include page="modal/modalAgregarCategoria.jsp" flush="true" />
 <a href="<c:url value="/logout" />">
 			<button class="btn btn-md btn-danger btn-block" name="logout"
 				>Logout</button>
   </a>
 		
-	<div class="limit"></div>
+	<div class="limit">
+	<input type="button" value="agregar categoria" onClick="modalAgregarCategoria()"></input>
+	</div>
 	<nav>
 	<ul>
 		<div class="row limit">
