@@ -1,12 +1,41 @@
 <script type="text/javascript">
 
-function cerrarModalCategoria(){
+function cerrarModalSnipplet(){
 	
 	var contenidoModal = $(".modal-agregar-snipplet-contenido").val();
-	var tituloModal = $(".modal-agregar-snipplet-title").val();
+	var tituloModal = $(".modal-agegar-snipplet-title-input").val();
+	var categoriaNombre = $('.modal-snipplet-nombre-categoria').html();
 	
 	
-	$('#modal-agregar-categoria').modal('hide');
+// 	private String nombreCategoria;
+// 	private String tituloSnipplet;
+// 	private String contenidoSnipplet;
+	
+	var saveAjaxSnipplet = new Object();
+	saveAjaxSnipplet.nombreCategoria = categoriaNombre;
+	saveAjaxSnipplet.tituloSnipplet = tituloModal;
+	saveAjaxSnipplet.contenidoSnipplet = contenidoModal;
+	console.log(saveAjaxSnipplet);
+	
+	$.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : "saveAjaxSnipplet",
+		data : JSON.stringify(saveAjaxSnipplet),
+		success : function(data) {
+			console.log("SUCCESS");
+		},
+		error : function(data) {
+			console.log("ERROR");
+		},
+		done : function(e) {
+			console.log("DONE");
+		}
+	});
+	
+	
+	$('#modal-agregar-snipplet').modal('hide');
+	
 	
 	
 }
@@ -23,9 +52,10 @@ function cerrarModalCategoria(){
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 style="visibility: hidden;" class="modal-snipplet"></h4>
+						<h4 style="visibility: hidden;" class="modal-snipplet-nombre-categoria">${nombreCategoria}</h4>
 						<h4 style="visibility: hidden;" class="modal-title-bkup"></h4>
 						<h4 class="modal-agegar-snipplet-title">
-							<input type="text" class="modal-title-input"></input>
+							<input type="text" class="modal-agegar-snipplet-title-input"></input>
 						</h4>
 					</div>
 					<div class="modal-agregar-snipplet-body">

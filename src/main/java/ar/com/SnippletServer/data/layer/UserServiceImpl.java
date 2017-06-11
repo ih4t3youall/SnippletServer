@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import ar.com.SnippletServer.domain.Role;
 import ar.com.SnippletServer.domain.User;

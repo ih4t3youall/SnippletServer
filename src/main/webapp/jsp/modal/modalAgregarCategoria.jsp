@@ -5,6 +5,8 @@ function cerrarModalCategoria(){
 	var contenidoModal = $(".modal-agregar-categoria-contenido").val();
 	var nuevaCategoria = getDynamicContent("getHtmlCategoria",contenidoModal);
 	
+
+	
 	$('#modal-agregar-categoria').modal('hide');
 	
 	

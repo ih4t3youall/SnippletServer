@@ -21,6 +21,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ar.com.SnippletServer.domain.Categoria;
+import ar.com.SnippletServer.domain.SaveAjaxSnipplet;
+import ar.com.SnippletServer.domain.Snipplet;
 import ar.com.SnippletServer.dto.ButtonDTO;
 import ar.com.SnippletServer.dto.CategoriaDTO;
 import ar.com.SnippletServer.dto.SendDTO;
@@ -116,20 +119,37 @@ public class MainController {
 	
 	
 	@RequestMapping(value = "getNewSnippletModal")
-	public ModelAndView getNewSnippletModal(@RequestBody String categoriaDTO){
-		System.out.println("something");
-		return null;
+	public ModelAndView getNewSnippletModal(@RequestBody String nombreCategoria){
+		ModelAndView mav = new ModelAndView("modal/modalAgregarSnipplet");
+		mav.addObject("nombreCategoria",nombreCategoria);
+		return mav;
 	}
 	
 	@RequestMapping(value = "createSnipplet", method = RequestMethod.POST)
 	public ModelAndView createSnipplet(){
 		
-		
-		System.out.println("asd");
 		return null;
 		
 	}
 	
+	@RequestMapping(value = "saveAjaxSnipplet")
+	public ModelAndView  saveAjaxSnipplet(@RequestBody String saveAjaxSnipplet){
+		SaveAjaxSnipplet fromJson = gsonUtility.getGson().fromJson(saveAjaxSnipplet, SaveAjaxSnipplet.class);
+		System.out.println(saveAjaxSnipplet);
+		
+		Categoria categoria = new Categoria();
+		Snipplet snipplet= new Snipplet();
+		
+		categoria.setNombreCategoria(fromJson.getNombreCategoria());
+		snipplet.setContenido(fromJson.getContenidoSnipplet());
+		snipplet.setTitulo(fromJson.getTituloSnipplet());
+		
+		categoria.add(snipplet);
+		
+		
+		return null;
+		
+	}
 	
 	
 }

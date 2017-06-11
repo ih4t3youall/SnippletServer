@@ -91,7 +91,8 @@ nav ul {
 	
 	
 function getNewSniipletModal(nombreCategoria){
-		console.log(nose);
+
+
 		
 
 		$.ajax({
@@ -100,7 +101,8 @@ function getNewSniipletModal(nombreCategoria){
 			contentType : "application/json",
 			data : nombreCategoria,
 			success : function(data) {
-
+				$("#modalTemp").append(data);
+				$('#modal-agregar-snipplet').modal('show');
 			}
 		});
 		
@@ -110,6 +112,12 @@ function getNewSniipletModal(nombreCategoria){
 
 </head>
 <body>
+
+<div id="modalTemp">
+
+
+
+</div>
 
 
  <jsp:include page="modal/modalAgregarCategoria.jsp" flush="true" />
