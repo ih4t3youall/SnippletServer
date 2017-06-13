@@ -21,11 +21,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ar.com.SnippletServer.data.layer.CategorySerivce;
 import ar.com.SnippletServer.domain.Categoria;
 import ar.com.SnippletServer.domain.SaveAjaxSnipplet;
 import ar.com.SnippletServer.domain.Snipplet;
 import ar.com.SnippletServer.dto.ButtonDTO;
 import ar.com.SnippletServer.dto.CategoriaDTO;
+import ar.com.SnippletServer.dto.HtmlSnippletDTO;
 import ar.com.SnippletServer.dto.SendDTO;
 import ar.com.SnippletServer.persistencia.Persistencia;
 import ar.com.SnippletServer.utilities.GsonUtility;
@@ -41,6 +43,9 @@ public class MainController {
 
 	@Autowired
 	private GsonUtility gsonUtility;
+	
+	@Autowired
+	private CategorySerivce categoryService;
 	
 	@RequestMapping("/inicio")
 	public ModelAndView main() {
@@ -125,12 +130,17 @@ public class MainController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "createSnipplet", method = RequestMethod.POST)
-	public ModelAndView createSnipplet(){
+	@RequestMapping(value ="htmlSnipplet")
+	public ModelAndView htmlSnipplet(@RequestBody String htmlSnipplet){
 		
-		return null;
+		ModelAndView mav = new ModelAndView("HTML/newSnipplet");
+		HtmlSnippletDTO htmlSnippletDTO = gsonUtility.getGson().fromJson(htmlSnipplet, HtmlSnippletDTO.class);
+		mav.addObject("item",htmlSnippletDTO);
+		return mav;
 		
 	}
+	
+	
 	
 	@RequestMapping(value = "saveAjaxSnipplet")
 	public ModelAndView  saveAjaxSnipplet(@RequestBody String saveAjaxSnipplet){

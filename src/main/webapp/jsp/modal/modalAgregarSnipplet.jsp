@@ -10,20 +10,20 @@ function cerrarModalSnipplet(){
 // 	private String nombreCategoria;
 // 	private String tituloSnipplet;
 // 	private String contenidoSnipplet;
+
 	
 	var saveAjaxSnipplet = new Object();
-	saveAjaxSnipplet.nombreCategoria = categoriaNombre;
-	saveAjaxSnipplet.tituloSnipplet = tituloModal;
-	saveAjaxSnipplet.contenidoSnipplet = contenidoModal;
+	saveAjaxSnipplet.categoriaId = categoriaNombre;
+	saveAjaxSnipplet.titulo = tituloModal;
+	saveAjaxSnipplet.contenido = contenidoModal;
 	console.log(saveAjaxSnipplet);
-	
 	$.ajax({
 		type : "POST",
 		contentType : "application/json",
-		url : "saveAjaxSnipplet",
+		url : "htmlSnipplet",
 		data : JSON.stringify(saveAjaxSnipplet),
 		success : function(data) {
-			console.log("SUCCESS");
+			$("#list-snipplets").append(data);
 		},
 		error : function(data) {
 			console.log("ERROR");
