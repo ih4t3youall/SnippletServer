@@ -1,6 +1,7 @@
 package ar.com.SnippletServer.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,11 @@ public class MigrationController {
 	@Autowired
 	private Persistencia persistencia;
 	
+	@Autowired
+	private GsonUtility gsonUtility;
+	
 	@RequestMapping(value ="/migracion" , method = RequestMethod.GET)
-	public void getAllUsers() throws IOException {
+	public String getAllUsers() throws IOException {
 		
 		SendDTO sendDTO = new SendDTO();
 		sendDTO.setUsername("martin");
@@ -30,6 +34,7 @@ public class MigrationController {
 		
 		
 		String [] files = persistencia.listDirectory(sendDTO.getUsername());
+		
 		
 		
 		for(String file : files) {
@@ -50,7 +55,7 @@ public class MigrationController {
 			
 		}
 		
-		persistencia.loadSavedFile(sendDTO);
+		return gsonUtility.getGson().toJson(sendDTO);
 		
 		
 		
