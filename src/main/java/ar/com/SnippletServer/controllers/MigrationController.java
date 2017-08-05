@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.SnippletServer.domain.Snipplet;
@@ -15,12 +17,11 @@ import ar.com.SnippletServer.utilities.GsonUtility;
 @RestController
 public class MigrationController {
 
-	@Autowired
-	private GsonUtility gsonUtility;
 	
 	@Autowired
 	private Persistencia persistencia;
 	
+	@RequestMapping(value ="/migracion" , method = RequestMethod.GET)
 	public void getAllUsers() throws IOException {
 		
 		SendDTO sendDTO = new SendDTO();
