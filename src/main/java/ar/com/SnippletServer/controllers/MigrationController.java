@@ -26,16 +26,13 @@ public class MigrationController {
 	@Autowired
 	private GsonUtility gsonUtility;
 	
-	@RequestMapping(value ="/migracion" , method = RequestMethod.GET)
-	public String getAllUsers() throws IOException {
-		
-		
-		
-		
-		
+	private static List<CategoriaDTO> categoriasDTO;
+	
+	@RequestMapping(value ="/iniciarMigracion" , method = RequestMethod.GET)
+	public int getAllUsers() throws IOException {
 		
 		String [] files = persistencia.listDirectory("martin");
-		List<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>();
+		categoriasDTO = new ArrayList<CategoriaDTO>();
 		
 		
 		for(String file : files) {
@@ -51,14 +48,18 @@ public class MigrationController {
 			catDTO.setSnipplets(snipplets);
 			categoriasDTO.add(catDTO);
 			
-			
-			
 		}
 		
-		return gsonUtility.getGson().toJson(categoriasDTO);
-		
-		
+		return categoriasDTO.size();
 		
 	}
+	
+	@RequestMapping(value = "/getNumber", method = RequestMethod.GET)
+	public String getNumber(int number) {
+		
+		return gsonUtility.getGson().toJson(categoriasDTO.get(number));
+		
+	}
+	
 	
 }
