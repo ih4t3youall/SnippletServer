@@ -49,6 +49,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/deleteCategory").permitAll()
 				.antMatchers("/getHtmlCategoria").permitAll()
 				.antMatchers("/migracion").permitAll()
+				.antMatchers("/getNumber").permitAll()
 				.antMatchers("/login").permitAll()
 				.antMatchers("/registration").permitAll()
 				.antMatchers("/listar/**").hasAuthority("ADMIN").anyRequest()
